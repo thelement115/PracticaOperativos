@@ -1,27 +1,24 @@
 #pragma once
-
+#include <fcntl.h>  
+#include <sys/stat.h>
 #include <semaphore.h>
-#define N_BUFFER 10
+#include <unistd.h>
+
 const int MAX_NOMBRE = 64;
 
-struct elemento {
-  int elemento;
-};
-
-
-struct ConexionSeccion_t {
+typedef struct ConexionSeccion {
   int* buffer;
-  int tamano;
-  int  entra;
-  int  sale;
+  int *tamano;
+  int  *entra;
+  int  *sale;
   sem_t* vacios;
   sem_t* llenos;
   sem_t* mutex;
-};
+} ConexionSeccion_t;
 
-struct Section_t{
+struct seccion_T{
   char nombre[MAX_NOMBRE];
-  bool activa;
+  bool active;
   unsigned long base;
   unsigned long limite;
   char semLlenos[MAX_NOMBRE];
@@ -29,3 +26,12 @@ struct Section_t{
   char semMutex[MAX_NOMBRE];
 };
 
+
+int APC_Init(const char* nombre, size_t tamano);
+int APC_Terminar(const char *nombre);
+int APC_ActivarSeccion(const char* nombreArea, const char *nombreSeccion, size_t tamano);
+int APC_DesactivarSeccion(const char*nombreArea, const char *nombreSeccion);
+ConexionSeccion_t* APC_ConectarSeccion(const char*nombreArea, const char *nombreSeccion);
+int APC_DesconectarSeccion(ConexionSeccion_t* conexion);
+int APC_Enviar(ConexionSeccion_t* conexion, int valor);
+int APC_Recibir(ConexionSeccion_t* conexion, int *valor);
