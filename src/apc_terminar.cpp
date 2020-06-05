@@ -11,7 +11,7 @@ int APC_Terminar(const char *nombre) {
     errno = APC_ERROR_ARGUMENTO;
     return APC_FAIL;
   }
-  fd = shm_unlink(nombre);
+  int fd = shm_unlink(nombre);
   if (fd < 0){
     errno = APC_ERROR_NOEXISTE;
     return APC_FAIL;
