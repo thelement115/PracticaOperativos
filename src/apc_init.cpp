@@ -9,23 +9,21 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include <cstdint>
 
 using namespace std;
 
 int APC_Init(const char* nombre, size_t tamano) {
-  sem_t *vacios = sem_open("vacios", O_CREAT | O_EXCL, 0660, (tamano/4));
-  sem_t *llenos = sem_open("llenos", O_CREAT | O_EXCL, 0660, 0);
-  sem_t *mutex  = sem_open("mutex", O_CREAT | O_EXCL, 0660, 1);
 
-  int fd = shm_open("area", O_RDWR | O_CREAT | O_EXCL, 0660);
+  int fd = shm_open(nombre, O_RDWR | O_CREAT | O_EXCL, 0660);
 
   if (fd < 0) {
     cerr << "Error creando la memoria compartida: "
-	 << errno << strerror(errno) << endl;
+	  << errno << strerror(errno) << endl;
     exit(1);
   }
 
-  if (ftruncate(fd, tamano) != 0) {
+  if (ftruncate(fd, sizeof(struct area) + sizeof(int)* tamano) != 0) {
     cerr << "Error creando la memoria compartida: "
 	  << errno << strerror(errno) << endl;
     exit(1);
@@ -39,6 +37,20 @@ int APC_Init(const char* nombre, size_t tamano) {
 	  << errno << strerror(errno) << endl;
     exit(1);
   }
+
+  const char *prefix = "/";
+  char *fichero = (char*)malloc(strlen(nombre)+2);
+  strcpy(fichero,prefix);
+  strcat(fichero,nombre);
+
+  struct admin padmin = {0,tamano,0};
+  struct area *pArea = (struct area*) dir;
+  *pArea->nombre = *fichero;
+  pArea->admin = padmin;
+  pArea->buffer = (intptr_t)(dir + sizeof(struct area));
+
+  close(fd);
+  return EXIT_SUCCESS;
 }
 
 
