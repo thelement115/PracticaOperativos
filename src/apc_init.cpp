@@ -15,6 +15,15 @@ using namespace std;
 
 int APC_Init(const char* nombre, size_t tamano) {
 
+  if (nombre == NULL){
+    errno = APC_ERROR_ARGUMENTO;
+    return APC_FAIL;
+  }
+
+  size_t len = strlen(nombre);
+
+  if (len > MAX_NOMBRE || )
+
   int fd = shm_open(nombre, O_RDWR | O_CREAT | O_EXCL, 0660);
 
   if (fd < 0) {
