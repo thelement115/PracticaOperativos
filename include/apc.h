@@ -36,7 +36,6 @@ struct area{
   char nombre[MAX_NOMBRE];
   struct admin admin;
   struct seccion_T secciones[10];
-  int buffer;
 };
 
 int APC_Init(const char* nombre, size_t tamano);

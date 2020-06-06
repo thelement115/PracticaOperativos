@@ -45,7 +45,13 @@ int APC_Init(const char* nombre, size_t tamano) {
   struct area *pArea = (struct area*) dir;
   *pArea->nombre = *fichero;
   pArea->admin = padmin;
-  pArea->buffer = (intptr_t)(dir + sizeof(struct area));
+
+
+  for(int i =0; i< 10; i++){
+    struct seccion_T &seccion = pArea->secciones[i];
+    seccion.active = false;
+    cout << seccion.base << endl;
+  }
 
   close(fd);
   return EXIT_SUCCESS;
