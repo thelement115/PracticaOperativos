@@ -3,8 +3,27 @@
 #include <sys/stat.h>
 #include <semaphore.h>
 #include <unistd.h>
+#include <errno.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <cstdint>
 
+const int MIN_TAMANO = 1000;
+const int MAX_TAMANO = 1000000;
 const int MAX_NOMBRE = 64;
+const int APC_ERROR_EXISTE = 1;
+const int APC_ERROR_ARGUMENTO = 2;
+const int APC_ERROR_DESCONOCIDO = 3;
+const int APC_ERROR_NOEXISTE = 4;
+const int APC_ERROR_LLENO = 5;
+const int APC_ERROR_NOMEMORIA = 6;
+const int APC_ERROR_NOSECCION = 7;
+const int APC_ERROR_NOCONEXION = 8;
+const int APC_FAIL = -1;
+
 
 typedef struct ConexionSeccion {
   int* buffer;
